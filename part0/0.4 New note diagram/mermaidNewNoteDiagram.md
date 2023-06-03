@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
 	participan browser
 	participan server
@@ -26,3 +27,4 @@ sequenceDiagram
 	activate server
 	server->>browser: JSON File {"message":"note created"}
 	deactivate server
+```
