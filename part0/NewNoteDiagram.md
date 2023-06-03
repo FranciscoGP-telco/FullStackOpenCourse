@@ -8,7 +8,7 @@ sequenceDiagram
 	server->>browser: HTML document
 	deactivate server
 	
-	Note right of server: The server recieve the info from the form and send again the HTML document
+	Note left of server: The server recieve the info from the form and send again the HTML document
 	
 	
 	browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
