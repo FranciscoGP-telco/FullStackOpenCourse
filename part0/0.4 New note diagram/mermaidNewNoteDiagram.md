@@ -15,7 +15,7 @@ sequenceDiagram
 	
 	browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
 	activate server
-	server->>browser: JSON file [{"content":"xd","date":"2023-06-03T09:30:14.175Z"},...]
+	server->>browser: JSON file
 	deactivate server
 	
 	browser->>server: GET https://studies.cs.helsinki.fi/favicon.ico
