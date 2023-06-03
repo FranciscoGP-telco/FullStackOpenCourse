@@ -1,7 +1,7 @@
 ```mermaid
 sequenceDiagram
-	participan browser
-	participan server
+	participant browser
+	participant server
 	
 	browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
 	activate server
@@ -13,9 +13,16 @@ sequenceDiagram
 	server->>browser: CSS file
 	deactivate server
 	
+	browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+	activate server
+	server->>browser: JavaScript File
+	deactivate server
+	
+	Note right of browser: The browser execute the JavaScript file and fetches the JSON 
+	
 	browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
 	activate server
-	server->>browser: JSON file
+	server->>browser: JSON file [{"content":"xd","date":"2023-06-03T09:30:14.175Z"},...]
 	deactivate server
 	
 	browser->>server: GET https://studies.cs.helsinki.fi/favicon.ico
@@ -27,4 +34,6 @@ sequenceDiagram
 	activate server
 	server->>browser: JSON File {"message":"note created"}
 	deactivate server
+	
+	Note right of browser: The browser execute the redrawNotes and sendToServer functions showing the data added
 ```
