@@ -1,5 +1,21 @@
 import { useState } from 'react'
 
+const Button = (props) => (
+  <button onClick={props.handleClick}>
+    {props.text}
+  </button>
+)
+
+const Anecdote = ({anecdote, vote}) => {
+  return(
+    <div>
+      <h1>Anecdote of the day</h1>
+      <p>{anecdote}</p>
+      <p>has {vote} votes</p>
+    </div>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -34,10 +50,9 @@ const App = () => {
 
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>Has {vote[selected]} votes</p>
-      <button onClick={handleVote}>Vote</button>
-      <button onClick={handleNext}>Next anecdotes!</button>
+      <Anecdote anecdote={anecdotes[selected]} vote={vote[selected]} />
+      <Button handleClick={() => handleVote()} text="Vote" />
+      <Button handleClick={() => handleNext()} text="Next!" />
     </div>
   )
 }
