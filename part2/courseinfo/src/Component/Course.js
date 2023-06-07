@@ -24,7 +24,7 @@ const Course = ({courses}) => {
         )
     }
 
-    return(
+    return (
     <div>
         {courses.map(course => (
             <>
