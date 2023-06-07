@@ -1,4 +1,4 @@
-const Course = ({course}) => {
+const Course = ({courses}) => {
     const Header = ({name}) => {
         return(
           <h1>{name}</h1>
@@ -25,11 +25,15 @@ const Course = ({course}) => {
     }
 
     return(
-        <div>
-            <Header name={course.name} />
-            <Content parts={course.parts} />
-            <Total parts={course.parts} />
-        </div>
+    <div>
+        {courses.map(course => (
+            <>
+                <Header name={course.name} />
+                <Content parts={course.parts} />
+                <Total parts={course.parts} />
+            </>
+        ))}
+    </div>
     )
 }
 
