@@ -13,10 +13,21 @@ const Course = ({course}) => {
         )
     }
     
+    const Total = ({parts}) => {
+        let result = 0
+        parts.forEach(value => {
+          result += value.exercises
+        })
+        return(
+          <p>Total of {result} exercises</p>
+        )
+    }
+
     return(
         <div>
             <Header name={course.name} />
             <Content parts={course.parts} />
+            <Total parts={course.parts} />
         </div>
     )
 }
