@@ -22,11 +22,14 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-    const nameObject = {
-      name: newName
+    if(persons.some((person) => person.name === newName)){
+      alert(`${newName} is in the phonebook`)
+    } else {
+      const nameObject = {
+        name: newName
+      }
+      setPersons(persons.concat(nameObject))
     }
-
-    setPersons(persons.concat(nameObject))
     setNewName('')
   }
 
