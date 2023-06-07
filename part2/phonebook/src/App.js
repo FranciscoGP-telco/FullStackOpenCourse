@@ -4,7 +4,7 @@ const Numbers = ({persons}) => {
     return(
       <>
         {persons.map(
-          person => <p key={person.name}>{person.name}</p>
+          person => <p key={person.name}>{person.name} {person.number}</p>
         )}
       </>
     )
@@ -12,25 +12,35 @@ const Numbers = ({persons}) => {
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas',
+      number: '34-666111454' }
   ]) 
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
-  const handleKeyPush = (event) => {
+  const handleNameKey = (event) => {
     setNewName(event.target.value)
   }
 
-  const addName = (event) => {
+  const handleNumberKey = (event) => {
+    setNewNumber(event.target.value)
+  }
+
+  const addPerson = (event) => {
     event.preventDefault()
     if(persons.some((person) => person.name === newName)){
       alert(`${newName} is in the phonebook`)
     } else {
-      const nameObject = {
-        name: newName
+      const personObject = {
+        name: newName,
+        number: newNumber
       }
-      setPersons(persons.concat(nameObject))
+      console.log(personObject)
+      setPersons(persons.concat(personObject))
+      console.log(persons)
     }
     setNewName('')
+    setNewNumber('')
   }
 
 
@@ -38,14 +48,19 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addName}>
+      <form onSubmit={addPerson}>
         <div>
           name: <input 
             value={newName}
-            onChange={handleKeyPush}/>
+            onChange={handleNameKey}/>
         </div>
+          <div>
+            number: <input 
+            value={newNumber}
+            onChange={handleNumberKey}/>
+          </div>
         <div>
-          <button type="addName">add</button>
+          <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
