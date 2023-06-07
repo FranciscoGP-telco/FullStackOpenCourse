@@ -14,12 +14,13 @@ const Course = ({course}) => {
     }
     
     const Total = ({parts}) => {
-        let result = 0
-        parts.forEach(value => {
-          result += value.exercises
-        })
+        const initialValue = 0
+        const sum = parts.reduce(
+            (accumulator, currentValue) => 
+            accumulator + currentValue.exercises, initialValue
+        )
         return(
-          <p>Total of {result} exercises</p>
+            <p>Total of  {sum} exercises</p>
         )
     }
 
