@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+
+
 const Filter = ({searchName, handleSearchKey}) => {
   return(
     <div>
@@ -33,6 +35,7 @@ const PersonForm = ({addPerson, newName, newNumber, handleNameKey, handleNumberK
     </form>
   )
 }
+
 const Numbers = ({persons, searchName}) => {
   return (
     <div>
@@ -48,7 +51,6 @@ const Numbers = ({persons, searchName}) => {
     </div>
   )
 }
-
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -77,6 +79,7 @@ const App = () => {
     setSearchName(event.target.value)
   }
 
+
   const addPerson = (event) => {
     event.preventDefault()
     if(persons.some((person) => person.name === newName)){
@@ -87,10 +90,14 @@ const App = () => {
         number: newNumber,
         id: persons.length +1
       }
-      setPersons(persons.concat(personObject))
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then(response => {
+          setPersons(persons.concat(personObject))
+          setNewName('')
+          setNewNumber('')
+        })
     }
-    setNewName('')
-    setNewNumber('')
   }
 
   return (
