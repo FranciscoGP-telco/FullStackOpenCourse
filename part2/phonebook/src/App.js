@@ -35,14 +35,17 @@ const PersonForm = ({addPerson, newName, newNumber, handleNameKey, handleNumberK
   )
 }
 
-const Numbers = ({persons, searchName}) => {
+const Numbers = ({persons, searchName, deleteFromDb}) => {
   return (
     <div>
       {persons.map(
         person => {
           if(searchName !== ''){
             if(person.name.includes(searchName)){
-              return <p key={person.name}>{person.name} {person.number}</p>
+              return (
+              <>
+                <p key={person.name}>{person.name} {person.number}</p><button onClick={(event) => deleteFromDb(event, person.id)}>Delete</button>
+              </>)
             }
           }
         }
@@ -81,7 +84,7 @@ const App = () => {
     setSearchName(event.target.value)
   }
 
-
+  
   const addPerson = (event) => {
     event.preventDefault()
     if(persons.some((person) => person.name === newName)){
@@ -105,6 +108,23 @@ const App = () => {
     }
   }
 
+  const deleteFromDb = (event, id) => {
+    event.preventDefault()
+    const personToDelete = persons.find(person => person.id === id).name
+    console.log(personToDelete)
+    if(window.confirm(`Do you want to delete ${personToDelete} from the DB?`)){
+      personService
+      .deletePerson(id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id))
+        console.log(persons)
+      })
+      .catch(error => {
+        console.log(`Error ${error} deleting the user with id ${id}`)
+      })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -112,7 +132,7 @@ const App = () => {
       <h3>Add a new</h3>
         <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameKey={handleNameKey} handleNumberKey={handleNumberKey}/>
       <h3>Numbers</h3>
-        <Numbers persons={persons} searchName={searchName}/>
+        <Numbers persons={persons} searchName={searchName} deleteFromDb={deleteFromDb}/>
     </div>
   )
 }
