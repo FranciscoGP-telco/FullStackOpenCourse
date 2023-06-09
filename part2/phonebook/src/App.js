@@ -88,14 +88,22 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     if(persons.some((person) => person.name === newName)){
-      alert(`${newName} is in the phonebook`)
+      const personUpdate = persons.find(person => person.name === newName)
+      if(window.confirm(`${personUpdate.name} is already added to the phonebook. DO you want to replace the old number?`)){
+        personUpdate.number = newNumber
+        personService
+        .updateNumber(personUpdate.id, personUpdate)
+          .then(returnPerson => {
+            console.log(returnPerson)
+            setPersons(persons.map(person => person.id === returnPerson.id ? person : returnPerson))
+          })
+      }
     } else {
       const personObject = {
         name: newName,
         number: newNumber,
         id: persons.length +1
       }
-
       personService
         .createPerson(personObject)
         .then(returnPerson => {
