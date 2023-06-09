@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-
+import personService from './services/persons'
 
 const Filter = ({searchName, handleSearchKey}) => {
   return(
@@ -59,10 +58,13 @@ const App = () => {
   const [searchName, setSearchName] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    personService
+      .listAll()
+      .then(initialList => {
+        setPersons(initialList)
+      })
+      .catch(error => {
+        console.log(`Error ${error} getting the list of persons`)
       })
   }, [])
 
@@ -90,12 +92,15 @@ const App = () => {
         number: newNumber,
         id: persons.length +1
       }
-      axios
-        .post('http://localhost:3001/persons', personObject)
-        .then(response => {
-          setPersons(persons.concat(personObject))
+
+      personService
+        .createPerson(personObject)
+        .then(returnPerson => {
+          setPersons(persons.concat(returnPerson))
           setNewName('')
           setNewNumber('')
+        }).catch(error => {
+          console.log(`Error ${error} adding the person`)
         })
     }
   }
