@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
 
+
 const Filter = ({searchName, handleSearchKey}) => {
   return(
     <div>
@@ -54,11 +55,24 @@ const Numbers = ({persons, searchName, deleteFromDb}) => {
   )
 }
 
+
+const OperationDone = ({message}) => {
+  if (message === '') {
+    return null
+  }
+  return (
+    <div className='operation'>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchName, setSearchName] = useState('')
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     personService
@@ -94,8 +108,12 @@ const App = () => {
         personService
         .updateNumber(personUpdate.id, personUpdate)
           .then(returnPerson => {
-            console.log(returnPerson)
             setPersons(persons.map(person => person.id === returnPerson.id ? person : returnPerson))
+            setMessage(`Modify the number of ${returnPerson.name}`)
+            setTimeout(() => {
+              setMessage('')
+            }, 6000)
+            
           })
       }
     } else {
@@ -108,6 +126,10 @@ const App = () => {
         .createPerson(personObject)
         .then(returnPerson => {
           setPersons(persons.concat(returnPerson))
+          setMessage(`Insert: ${returnPerson.name}`)
+          setTimeout(() => {
+            setMessage('')
+          }, 6000)
           setNewName('')
           setNewNumber('')
         }).catch(error => {
@@ -136,6 +158,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+        <OperationDone message={message} />
         <Filter persons={persons} handleSearchKey={handleSearchKey}/>
       <h3>Add a new</h3>
         <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameKey={handleNameKey} handleNumberKey={handleNumberKey}/>

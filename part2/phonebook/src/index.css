@@ -1,0 +1,9 @@
+.operation {
+    color: darkgreen;
+    padding-top: 10px;
+    font-size: 12px;
+    background-color: rgb(216, 216, 216);
+    border: 6px;
+    border-style: solid;
+    border-color: green;
+}
