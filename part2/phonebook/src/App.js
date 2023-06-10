@@ -67,12 +67,26 @@ const OperationDone = ({message}) => {
   )
 }
 
+
+const Error = ({message}) => {
+  if (message === '') {
+    return null
+  }
+  return (
+    <div className='error'>
+      {message}
+    </div>
+  )
+}
+
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchName, setSearchName] = useState('')
   const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
 
   useEffect(() => {
     personService
@@ -112,6 +126,13 @@ const App = () => {
             setMessage(`Modify the number of ${returnPerson.name}`)
             setTimeout(() => {
               setMessage('')
+            }, 6000)
+            
+          }).catch(error =>{
+            console.log(`Error ${error}. Can't modify the person because doesn't exists`)
+            setError(`Error modifying ${personUpdate.name} because doesn't exist in the DB`)
+            setTimeout(() => {
+              setError('')
             }, 6000)
             
           })
