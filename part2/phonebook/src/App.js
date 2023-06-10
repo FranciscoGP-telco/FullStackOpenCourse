@@ -68,13 +68,13 @@ const OperationDone = ({message}) => {
 }
 
 
-const Error = ({message}) => {
-  if (message === '') {
+const Error = ({error}) => {
+  if (error === '') {
     return null
   }
   return (
     <div className='error'>
-      {message}
+      {error}
     </div>
   )
 }
