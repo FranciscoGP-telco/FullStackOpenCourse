@@ -180,6 +180,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
         <OperationDone message={message} />
+        <Error error={error} />
         <Filter persons={persons} handleSearchKey={handleSearchKey}/>
       <h3>Add a new</h3>
         <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameKey={handleNameKey} handleNumberKey={handleNumberKey}/>
