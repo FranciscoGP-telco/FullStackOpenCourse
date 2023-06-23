@@ -1,6 +1,6 @@
 
 import axios from 'axios'
-const url = 'https://fullstackopencourse-3.onrender.com/api/persons'
+const url = '/api/persons'
 
 
 const listAll = () => {
