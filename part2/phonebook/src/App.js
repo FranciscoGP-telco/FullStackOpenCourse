@@ -156,6 +156,9 @@ const App = () => {
         }).catch(error => {
           console.log(error.response.data.error)
           setError(error.response.data.error)
+          setTimeout(() => {
+            setError('')
+          }, 6000)
         })
     }
   }
