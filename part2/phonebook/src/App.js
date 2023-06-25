@@ -129,8 +129,8 @@ const App = () => {
             }, 6000)
             
           }).catch(error =>{
-            console.log(`Error ${error}. Can't modify the person because doesn't exists`)
-            setError(`Error modifying ${personUpdate.name} because doesn't exist in the DB`)
+            console.log(error.response.data.error)
+            setError(error.response.data.error)
             setTimeout(() => {
               setError('')
             }, 6000)
@@ -154,7 +154,8 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         }).catch(error => {
-          console.log(`Error ${error} adding the person`)
+          console.log(error.response.data.error)
+          setError(error.response.data.error)
         })
     }
   }
