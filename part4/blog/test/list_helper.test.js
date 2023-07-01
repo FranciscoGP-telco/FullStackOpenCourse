@@ -144,6 +144,6 @@ describe('check likes', () => {
   test('from a list of blog, get the most likes post object', () => {
     const result = listHelper.favoriteBlog(blogs)
     expect(result).toEqual(blogs[2])
-
   })
+
 })
