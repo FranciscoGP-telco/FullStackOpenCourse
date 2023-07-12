@@ -12,99 +12,106 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs)
 })
 
-test('blogs comes in json format', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
+describe('When we retrieve the blogs from the DB', () => {
+  test('blogs comes in json format', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+  })
+
+  test('we can get all the blogs', async () => {
+    const response = await api.get('/api/blogs')
+
+    expect(response.body).toHaveLength(helper.initialBlogs.length)
+  })
+
 })
 
-test('we can get all the blogs', async () => {
-  const response = await api.get('/api/blogs')
+describe('We have an identifier', () => {
+  test('The unique identifier is called id', async () => {
+    const startingBlogs = await helper.blogsInDb()
+    const blogToCheck = startingBlogs[0]
 
-  expect(response.body).toHaveLength(helper.initialBlogs.length)
+    const resultBlog = await api
+      .get(`/api/blogs/${blogToCheck._id}`)
+
+    expect(resultBlog.body._id).toBeDefined()
+  })
 })
 
-test('The unique identifier is called id', async () => {
-  const startingBlogs = await helper.blogsInDb()
-  const blogToCheck = startingBlogs[0]
+describe('When we try to do a POST', () => {
+  test('A blog can be added', async () => {
+    const blog = {
+      title: 'Firmware 16.0 has been published for Nintendo Switch',
+      author: 'Francisco Garcia',
+      url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
+      likes: 5
+    }
 
-  const resultBlog = await api
-    .get(`/api/blogs/${blogToCheck._id}`)
+    await api
+      .post('/api/blogs')
+      .send(blog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
 
-  expect(resultBlog.body._id).toBeDefined()
-})
+    const blogs = await helper.blogsInDb()
+    expect(blogs).toHaveLength(helper.initialBlogs.length + 1)
 
-test('A blog can be added by POST', async () => {
-  const blog = {
-    title: 'Firmware 16.0 has been published for Nintendo Switch',
-    author: 'Francisco Garcia',
-    url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
-    likes: 5
-  }
+    const titles = blogs.map(b => b.title)
+    expect(titles).toContain(
+      'Firmware 16.0 has been published for Nintendo Switch'
+    )
+  })
 
-  await api
-    .post('/api/blogs')
-    .send(blog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+  test('if a blog doesnt have the number of post, it will set to 0', async () => {
+    const blog = {
+      title: 'Firmware 16.0 has been published for Nintendo Switch',
+      author: 'Francisco Garcia',
+      url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch'
+    }
 
-  const blogs = await helper.blogsInDb()
-  expect(blogs).toHaveLength(helper.initialBlogs.length + 1)
+    await api
+      .post('/api/blogs')
+      .send(blog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
 
-  const titles = blogs.map(b => b.title)
-  expect(titles).toContain(
-    'Firmware 16.0 has been published for Nintendo Switch'
-  )
-})
+    const blogs = await helper.blogsInDb()
+    const likes = blogs.map(b => b.likes)
+    expect(likes.at(-1)).toBe(0)
+  })
 
-test('if a blog doesnt have the number of post, it will set to 0', async () => {
-  const blog = {
-    title: 'Firmware 16.0 has been published for Nintendo Switch',
-    author: 'Francisco Garcia',
-    url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch'
-  }
+  test('if url or title is missing, we recieve a 400', async () => {
+    const blogWithoutTitle = {
+      author: 'Francisco Garcia',
+      url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
+      likes: 5
+    }
+    await api
+      .post('/api/blogs')
+      .send(blogWithoutTitle)
+      .expect(400)
 
-  console.log('blog', blog)
-  await api
-    .post('/api/blogs')
-    .send(blog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+    const blogWithoutAuthor = {
+      title: 'Firmware 16.0 has been published for Nintendo Switch',
+      url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
+      likes: 5
+    }
+    await api
+      .post('/api/blogs')
+      .send(blogWithoutAuthor)
+      .expect(400)
 
-  const blogs = await helper.blogsInDb()
-  const likes = blogs.map(b => b.likes)
-  expect(likes.at(-1)).toBe(0)
-})
+    const blogWithoutAuthorAndTitle = {
+      url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
+      likes: 5
+    }
+    await api
+      .post('/api/blogs')
+      .send(blogWithoutAuthorAndTitle)
+      .expect(400)
+  })
 
-test('if url or title is missing, we recieve a 400', async () => {
-  const blogWithoutTitle = {
-    author: 'Francisco Garcia',
-    url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
-    likes: 5
-  }
-  await api
-    .post('/api/blogs')
-    .send(blogWithoutTitle)
-    .expect(400)
-
-  const blogWithoutAuthor = {
-    title: 'Firmware 16.0 has been published for Nintendo Switch',
-    url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
-    likes: 5
-  }
-  await api
-    .post('/api/blogs')
-    .send(blogWithoutAuthor)
-    .expect(400)
-
-  const blogWithoutAuthorAndTitle = {
-    url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
-    likes: 5
-  }
-  await api
-    .post('/api/blogs')
-    .send(blogWithoutAuthorAndTitle)
-    .expect(400)
 })
 
 describe('deleting a post', () => {
@@ -140,7 +147,6 @@ describe('updating the number of likes of a post', () => {
     const blogsAfterUpdate = await helper.blogsInDb()
 
     const likesBefore = blogsAfterUpdate[0].likes
-    console.log(blogsAfterUpdate[0].likes)
 
     expect(likesBefore).not.toBe(blogsAtBeginning[0].likes)
   })
