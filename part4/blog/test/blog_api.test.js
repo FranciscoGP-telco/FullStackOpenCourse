@@ -76,6 +76,37 @@ test('if a blog doesnt have the number of post, it will set to 0', async () => {
   expect(likes.at(-1)).toBe(0)
 })
 
+test('if url or title is missing, we recieve a 400', async () => {
+  const blogWithoutTitle = {
+    author: 'Francisco Garcia',
+    url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
+    likes: 5
+  }
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutTitle)
+    .expect(400)
+
+  const blogWithoutAuthor = {
+    title: 'Firmware 16.0 has been published for Nintendo Switch',
+    url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
+    likes: 5
+  }
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutAuthor)
+    .expect(400)
+
+  const blogWithoutAuthorAndTitle = {
+    url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
+    likes: 5
+  }
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutAuthorAndTitle)
+    .expect(400)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
