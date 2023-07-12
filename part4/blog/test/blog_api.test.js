@@ -109,8 +109,8 @@ test('if url or title is missing, we recieve a 400', async () => {
 
 describe('deleting a post', () => {
   test('Check if we recieve a code 204 after deleting, id is not in DB and the number of post reduced by 1', async () => {
-    const blogAtBeginning = await helper.blogsInDb()
-    const blogToDelete = blogAtBeginning[0]
+    const blogsAtBeginning = await helper.blogsInDb()
+    const blogToDelete = blogsAtBeginning[0]
 
     await api
       .delete(`/api/blogs/${blogToDelete._id}`)
@@ -123,6 +123,26 @@ describe('deleting a post', () => {
     const ids = blogsAfterDeleting.map(b => b._id)
 
     expect(ids).not.toContain(blogToDelete.id)
+  })
+})
+
+describe('updating the number of likes of a post', () => {
+  test('Check if we recieve a code 201, and the post is updated', async () => {
+    const blogsAtBeginning = await helper.blogsInDb()
+    const blogToUpdate = blogsAtBeginning[0]
+
+    blogToUpdate.likes = 2
+
+    await api
+      .put(`/api/blogs/${blogToUpdate._id}`, blogToUpdate)
+      .expect(201)
+
+    const blogsAfterUpdate = await helper.blogsInDb()
+
+    const likesBefore = blogsAfterUpdate[0].likes
+    console.log(blogsAfterUpdate[0].likes)
+
+    expect(likesBefore).not.toBe(blogsAtBeginning[0].likes)
   })
 })
 
