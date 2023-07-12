@@ -107,6 +107,25 @@ test('if url or title is missing, we recieve a 400', async () => {
     .expect(400)
 })
 
+describe('deleting a post', () => {
+  test('Check if we recieve a code 204 after deleting, id is not in DB and the number of post reduced by 1', async () => {
+    const blogAtBeginning = await helper.blogsInDb()
+    const blogToDelete = blogAtBeginning[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete._id}`)
+      .expect(204)
+
+    const blogsAfterDeleting = await helper.blogsInDb()
+
+    expect(blogsAfterDeleting).toHaveLength(helper.initialBlogs.length - 1)
+
+    const ids = blogsAfterDeleting.map(b => b._id)
+
+    expect(ids).not.toContain(blogToDelete.id)
+  })
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
