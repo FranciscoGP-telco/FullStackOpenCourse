@@ -28,13 +28,35 @@ test('The unique identifier is called id', async () => {
   const startingBlogs = await helper.blogsInDb()
   const blogToCheck = startingBlogs[0]
 
-  console.log(blogToCheck._id)
-
   const resultBlog = await api
     .get(`/api/blogs/${blogToCheck._id}`)
 
   expect(resultBlog.body._id).toBeDefined()
 })
+
+test('A blog can be added by POST', async () => {
+  const blog = {
+    title: 'Firmware 16.0 has been published for Nintendo Switch',
+    author: 'Francisco Garcia',
+    url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
+    likes: 5
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogs = await helper.blogsInDb()
+  expect(blogs).toHaveLength(helper.initialBlogs.length + 1)
+
+  const titles = blogs.map(b => b.title)
+  expect(titles).toContain(
+    'Firmware 16.0 has been published for Nintendo Switch'
+  )
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
