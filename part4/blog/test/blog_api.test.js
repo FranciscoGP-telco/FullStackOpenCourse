@@ -57,6 +57,25 @@ test('A blog can be added by POST', async () => {
   )
 })
 
+test('if a blog doesnt have the number of post, it will set to 0', async () => {
+  const blog = {
+    title: 'Firmware 16.0 has been published for Nintendo Switch',
+    author: 'Francisco Garcia',
+    url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch'
+  }
+
+  console.log('blog', blog)
+  await api
+    .post('/api/blogs')
+    .send(blog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogs = await helper.blogsInDb()
+  const likes = blogs.map(b => b.likes)
+  expect(likes.at(-1)).toBe(0)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
