@@ -24,6 +24,17 @@ test('we can get all the blogs', async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
+test('The unique identifier is called id', async () => {
+  const startingBlogs = await helper.blogsInDb()
+  const blogToCheck = startingBlogs[0]
+
+  console.log(blogToCheck._id)
+
+  const resultBlog = await api
+    .get(`/api/blogs/${blogToCheck._id}`)
+
+  expect(resultBlog.body._id).toBeDefined()
+})
 afterAll(async () => {
   await mongoose.connection.close()
 })
