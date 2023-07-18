@@ -33,9 +33,9 @@ describe('We have an identifier', () => {
     const blogToCheck = startingBlogs[0]
 
     const resultBlog = await api
-      .get(`/api/blogs/${blogToCheck._id}`)
+      .get(`/api/blogs/${blogToCheck.id}`)
 
-    expect(resultBlog.body._id).toBeDefined()
+    expect(resultBlog.body.id).toBeDefined()
   })
 })
 
@@ -87,6 +87,7 @@ describe('When we try to do a POST', () => {
       url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
       likes: 5
     }
+
     await api
       .post('/api/blogs')
       .send(blogWithoutTitle)
@@ -120,14 +121,14 @@ describe('deleting a post', () => {
     const blogToDelete = blogsAtBeginning[0]
 
     await api
-      .delete(`/api/blogs/${blogToDelete._id}`)
+      .delete(`/api/blogs/${blogToDelete.id}`)
       .expect(204)
 
     const blogsAfterDeleting = await helper.blogsInDb()
 
     expect(blogsAfterDeleting).toHaveLength(helper.initialBlogs.length - 1)
 
-    const ids = blogsAfterDeleting.map(b => b._id)
+    const ids = blogsAfterDeleting.map(b => b.id)
 
     expect(ids).not.toContain(blogToDelete.id)
   })
@@ -141,7 +142,7 @@ describe('updating the number of likes of a post', () => {
     blogToUpdate.likes = 2
 
     await api
-      .put(`/api/blogs/${blogToUpdate._id}`, blogToUpdate)
+      .put(`/api/blogs/${blogToUpdate.id}`, blogToUpdate)
       .expect(201)
 
     const blogsAfterUpdate = await helper.blogsInDb()
