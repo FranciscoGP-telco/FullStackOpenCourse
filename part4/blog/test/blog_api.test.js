@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-const app = require('../app')
 
+const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
@@ -17,6 +17,7 @@ describe('When we retrieve the blogs from the DB', () => {
     await api
       .get('/api/blogs')
       .expect(200)
+      .expect('Content-Type', /application\/json/)
   })
 
   test('we can get all the blogs', async () => {
