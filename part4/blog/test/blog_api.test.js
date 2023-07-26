@@ -46,12 +46,14 @@ describe('When we try to do a POST', () => {
       title: 'Firmware 16.0 has been published for Nintendo Switch',
       author: 'Francisco Garcia',
       url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
-      likes: 5
+      likes: 5,
+      user: '64b6c6aec8567600846f4ff7'
     }
 
     await api
       .post('/api/blogs')
       .send(blog)
+      .set({ Authorization : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBha29za2EiLCJpZCI6IjY0YjZjNmFlYzg1Njc2MDA4NDZmNGZmNyIsImlhdCI6MTY5MDMwMjEyMn0.TlrzBcSillKVexs-x8VDe0X_epBVQK4RKml5v-hyDbI' })
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -68,12 +70,14 @@ describe('When we try to do a POST', () => {
     const blog = {
       title: 'Firmware 16.0 has been published for Nintendo Switch',
       author: 'Francisco Garcia',
-      url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch'
+      url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
+      user: '64b6c6aec8567600846f4ff7'
     }
 
     await api
       .post('/api/blogs')
       .send(blog)
+      .set({ Authorization : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBha29za2EiLCJpZCI6IjY0YjZjNmFlYzg1Njc2MDA4NDZmNGZmNyIsImlhdCI6MTY5MDMwMjEyMn0.TlrzBcSillKVexs-x8VDe0X_epBVQK4RKml5v-hyDbI' })
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -86,7 +90,8 @@ describe('When we try to do a POST', () => {
     const blogWithoutTitle = {
       author: 'Francisco Garcia',
       url: '/Firmware_16.0_has_been_published_for_Nintendo_Switch',
-      likes: 5
+      likes: 5,
+      user: '64b6c6aec8567600846f4ff7'
     }
 
     await api
@@ -123,6 +128,7 @@ describe('deleting a post', () => {
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set({ Authorization : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBha29za2EiLCJpZCI6IjY0YjZjNmFlYzg1Njc2MDA4NDZmNGZmNyIsImlhdCI6MTY5MDMwMjEyMn0.TlrzBcSillKVexs-x8VDe0X_epBVQK4RKml5v-hyDbI' })
       .expect(204)
 
     const blogsAfterDeleting = await helper.blogsInDb()
@@ -133,6 +139,16 @@ describe('deleting a post', () => {
 
     expect(ids).not.toContain(blogToDelete.id)
   })
+
+  test('If we dont sent and authorization, we recieve a 401 error' , async () => {
+    const blogsAtBeginning = await helper.blogsInDb()
+    const blogToDelete = blogsAtBeginning[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(401)
+  })
+
 })
 
 describe('updating the number of likes of a post', () => {

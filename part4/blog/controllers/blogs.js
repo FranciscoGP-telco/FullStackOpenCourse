@@ -1,5 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const middleware = require('../utils/middleware')
 
 
 
@@ -21,7 +22,7 @@ blogsRouter.get('/:id', async (request, response) => {
   }
 })
 
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', middleware.tokenExtractor, async (request, response) => {
   const body = request.body
 
   if(body.title && body.url && body.author && body.user){
@@ -41,14 +42,11 @@ blogsRouter.post('/', async (request, response) => {
 
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
+blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
   const body = request.body
 
   const user = body.user
   const blog = await Blog.findById(request.params.id)
-
-  console.log('user', user._id.toString())
-  console.log('blog', blog.user.toString())
 
   if (blog.user.toString() !== user._id.toString()) {
     return response.status(401).json({ error: 'Invalid user' })
