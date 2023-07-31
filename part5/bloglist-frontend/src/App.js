@@ -1,93 +1,16 @@
 import { useState, useEffect } from 'react'
+
 import Blog from './components/Blog'
+import LoginForm from './components/LoginForm'
+import OperationDone from './components/OperationDone'
+import Error from './components/Error'
+import UsernameLogout from './components/UsernameLogout'
+import CreatePost from './components/CreatePost'
+import Togglable from './components/Togglable'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-
-
-const OperationDone = ({message}) => {
-  if (message === '') {
-    return null
-  }
-  return (
-    <div className='operation'>
-      {message}
-    </div>
-  )
-}
-
-const Error = ({error}) => {
-  if (error === '') {
-    return null
-  }
-  return (
-    <div className='error'>
-      {error}
-    </div>
-  )
-}
-
-const ShowUsernameLogout = ({user, handleLogout}) => {
-  return (
-    <p>{user.name} is logged in <form onSubmit={handleLogout}><button type="submit">Logout</button></form></p>
-  )
-}
-
-const CreatePost = ({newTitle, newAuthor, newUrl, handlePost, handleNewTitle, handleNewAuthor, handleNewUrl}) => {
-  return(
-    <div>
-      <h2>Create new</h2>
-      <form onSubmit={handlePost}>
-        title:
-          <input
-          type="text"
-          value={newTitle}
-          name="Title"
-          onChange={handleNewTitle}/><br/>
-        author:
-          <input
-            type="text"
-            value={newAuthor}
-            name="Author"
-            onChange={handleNewAuthor}/><br/>
-        url:
-        <input
-            type="text"
-            value={newUrl}
-            name="Url"
-            onChange={handleNewUrl}/><br/>
-        <button type="submit">create</button>
-      </form>
-    </div>
-  )
-}
-
-const ShowLogin = ({username, password, handleLogin, handleUsername, handlePassword}) => {
-  return(
-    <div>
-      <h2>Log in to the application</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-            <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={handleUsername}/>
-        </div>
-        <div>
-          password
-            <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={handlePassword}/>
-        </div>      
-        <button type="submit">login</button>
-      </form>
-    </div>
-  )
-}
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
@@ -201,19 +124,21 @@ const App = () => {
         <OperationDone message={message} />
         <Error error={errorMessage} />
         <h2>blogs</h2>
-        <ShowUsernameLogout user={user} handleLogout={handleLogout}/>
+        <UsernameLogout user={user} handleLogout={handleLogout}/>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}
-        <CreatePost 
-          newTitle={newTitle} 
-          newAuthor={newAuthor} 
-          newUrl={newUrl} 
-          handlePost={handlePost} 
-          handleNewTitle={handleNewTitle} 
-          handleNewAuthor={handleNewAuthor} 
-          handleNewUrl={handleNewUrl}
-        />
+        <Togglable buttonLabel="New blog">
+          <CreatePost 
+            newTitle={newTitle} 
+            newAuthor={newAuthor} 
+            newUrl={newUrl} 
+            handlePost={handlePost} 
+            handleNewTitle={handleNewTitle} 
+            handleNewAuthor={handleNewAuthor} 
+            handleNewUrl={handleNewUrl}
+          />
+        </Togglable>
       </div>
     )
   } 
@@ -221,7 +146,7 @@ const App = () => {
     <div>
       <OperationDone message={message} />
       <Error error={errorMessage} />
-      <ShowLogin 
+      <LoginForm 
         username={username} 
         password={password} 
         handleLogin={handleLogin}
