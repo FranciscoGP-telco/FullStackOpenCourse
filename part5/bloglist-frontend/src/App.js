@@ -5,7 +5,7 @@ import LoginForm from './components/LoginForm'
 import OperationDone from './components/OperationDone'
 import Error from './components/Error'
 import UsernameLogout from './components/UsernameLogout'
-import CreatePost from './components/CreatePost'
+import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
 import blogService from './services/blogs'
@@ -15,9 +15,6 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState('')
   const [message, setMessage] = useState('')
@@ -71,33 +68,6 @@ const App = () => {
     }
   }
 
-  const handlePost = async (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-      likes: 0
-    }
-
-    try{
-      const newBlog = await blogService.create(blogObject)
-      setNewTitle('')
-      setNewAuthor('')
-      setNewUrl('')
-      setMessage(`A new blog ${newBlog.title} by ${newBlog.title} added`)
-      setTimeout(() => {
-        setErrorMessage('')
-      }, 6000)
-    } catch (exception) {
-      console.log(exception)
-      setErrorMessage('Error posting the new blog')
-      setTimeout(() => {
-        setErrorMessage('')
-      }, 6000)
-    }
-  }
-
   const handleUsername = (event) => {
     setUsername(event.target.value)
   }
@@ -106,16 +76,22 @@ const App = () => {
     setPassword(event.target.value)
   }
 
-  const handleNewTitle = (event) => {
-    setNewTitle(event.target.value)
-  }
 
-  const handleNewAuthor = (event) => {
-    setNewAuthor(event.target.value)
-  }
-
-  const handleNewUrl = (event) => {
-    setNewUrl(event.target.value)
+  const addBlog = async (blogObject) => {
+    try{
+      const newBlog = await blogService.create(blogObject)
+      setMessage(`A new blog ${newBlog.title} by ${newBlog.title} added`)
+      setBlogs(blogs.concat(newBlog))
+      setTimeout(() => {
+        setMessage('')
+      }, 6000)
+    } catch (exception) {
+      console.log(exception)
+      setErrorMessage('Error posting the new blog')
+      setTimeout(() => {
+        setErrorMessage('')
+      }, 6000)
+    }
   }
 
   if (user) {
@@ -129,15 +105,7 @@ const App = () => {
           <Blog key={blog.id} blog={blog} />
         )}
         <Togglable buttonLabel="New blog">
-          <CreatePost 
-            newTitle={newTitle} 
-            newAuthor={newAuthor} 
-            newUrl={newUrl} 
-            handlePost={handlePost} 
-            handleNewTitle={handleNewTitle} 
-            handleNewAuthor={handleNewAuthor} 
-            handleNewUrl={handleNewUrl}
-          />
+          <BlogForm createBlog={addBlog}/>
         </Togglable>
       </div>
     )
