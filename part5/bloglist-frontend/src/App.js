@@ -20,9 +20,21 @@ const App = () => {
   const [message, setMessage] = useState('')
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    const getAllBlogs = async () => {
+      const listOfBlogs = await blogService.getAll()
+      const compare = (a, b) => {
+        if (a.likes < b.likes){
+          return 1
+        }
+        if (a.likes > b.likes){
+          return -1
+        }
+        return 0
+      }
+      listOfBlogs.sort(compare)
+      setBlogs(listOfBlogs)
+    }
+    getAllBlogs()
   }, [blogs])
 
   useEffect(() => {
