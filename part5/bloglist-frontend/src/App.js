@@ -124,7 +124,7 @@ const App = () => {
   }
 
   const deleteBlog = async (id) => {
-    
+
     try{
       await blogService.deleteBlog(id)
       const filterId = (blog) => {
@@ -154,14 +154,14 @@ const App = () => {
         </Togglable>
       </div>
     )
-  } 
+  }
   return (
     <div>
       <OperationDone message={message} />
       <Error error={errorMessage} />
-      <LoginForm 
-        username={username} 
-        password={password} 
+      <LoginForm
+        username={username}
+        password={password}
         handleLogin={handleLogin}
         handleUsername={handleUsername}
         handlePassword={handlePassword}/>

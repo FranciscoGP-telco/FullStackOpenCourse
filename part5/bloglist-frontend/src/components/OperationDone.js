@@ -1,5 +1,5 @@
 
-const OperationDone = ({message}) => {
+const OperationDone = ({ message }) => {
   if (message === '') {
     return null
   }

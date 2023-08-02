@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useState } from 'react'
 
-const Blog = ({blog, updateLikes, removeBlog }) => {
+const Blog = ({ blog, updateLikes, removeBlog }) => {
   const [visible, setVisible] = useState(false)
-  
-  const hideWhenVisible = { display: visible ? 'none' : ''}
-  const showWhenVisible = { display: visible ? '' : 'none'}
+
+  const hideWhenVisible = { display: visible ? 'none' : '' }
+  const showWhenVisible = { display: visible ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -33,7 +33,7 @@ const Blog = ({blog, updateLikes, removeBlog }) => {
         {blog.author} <button onClick={toggleVisibility}>Hide</button><br/>
         <button onClick={(e) => deleteBlog(e, blog)}>Delete</button>
       </div>
-    </div>  
+    </div>
   )
 }
 
