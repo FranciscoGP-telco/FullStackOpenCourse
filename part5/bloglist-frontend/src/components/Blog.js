@@ -28,9 +28,9 @@ const Blog = ({ blog, updateLikes, removeBlog }) => {
         {blog.title} <button onClick={toggleVisibility} style={hideWhenVisible}>view</button><br/>
       </div>
       <div style={showWhenVisible} className='togglableContent'>
-        {blog.url}<br/>
-        likes {blog.likes} <button onClick={(e) => addLike(e, blog.id)}>Like</button> <br/>
-        {blog.author} <button onClick={toggleVisibility}>Hide</button><br/>
+        <p>{blog.url}</p>
+        <p>likes {blog.likes} <button onClick={(e) => addLike(e, blog.id)}>Like</button></p>
+        <p>{blog.author}</p> <button onClick={toggleVisibility}>Hide</button><br/>
         <button onClick={(e) => deleteBlog(e, blog)}>Delete</button>
       </div>
     </div>
