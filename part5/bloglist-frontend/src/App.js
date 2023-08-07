@@ -35,10 +35,9 @@ const App = () => {
       setBlogs(listOfBlogs)
     }
     getAllBlogs()
-  }, [])
+  }, [blogs])
 
   useEffect(() => {
-    console.log('hola')
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -74,7 +73,6 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       setErrorMessage('User or Password incorrect')
-      console.log('User or Password incorrect')
       setUsername('')
       setPassword('')
       setTimeout(() => {
@@ -102,7 +100,6 @@ const App = () => {
         setMessage('')
       }, 6000)
     } catch (exception) {
-      console.log(exception)
       setErrorMessage('Error posting the new blog')
       setTimeout(() => {
         setErrorMessage('')

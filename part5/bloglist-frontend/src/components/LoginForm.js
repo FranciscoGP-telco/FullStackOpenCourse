@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+import propTypes from 'prop-types'
 
 const LoginForm = ({
   username,
@@ -35,11 +35,11 @@ const LoginForm = ({
   )
 }
 
-LoginForm.PropTypes = {
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
-  handleLogin: PropTypes.func.isRequired,
-  handleUsername: PropTypes.func.isRequired,
-  handlePassword: PropTypes.func.isRequired
+LoginForm.propTypes = {
+  username: propTypes.string.isRequired,
+  password: propTypes.string.isRequired,
+  handleLogin: propTypes.func.isRequired,
+  handleUsername: propTypes.func.isRequired,
+  handlePassword: propTypes.func.isRequired
 }
 export default LoginForm
