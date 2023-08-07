@@ -7,7 +7,10 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "lint": "eslint .",
-    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "build:ui": "rm -rf build && cd ../../part5/bloglist-frontend && npm run build && cp -r build '../../part4/blog'",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
+    "start:test": "NODE_ENV=test node index.js"
   },
   "author": "Francisco García",
   "license": "ISC",

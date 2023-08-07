@@ -35,9 +35,10 @@ const App = () => {
       setBlogs(listOfBlogs)
     }
     getAllBlogs()
-  }, [blogs])
+  }, [])
 
   useEffect(() => {
+    console.log('hola')
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
