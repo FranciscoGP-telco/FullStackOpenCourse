@@ -43,5 +43,26 @@ describe('<Blog /> only render blog title and author by default', () => {
     await screen.findAllByText('likes 11')
   })
 
-
 } )
+
+
+test('if like button is click twice, the props is called twice', async () =>  {
+  const blog = {
+    title: 'New Final Fantaxy XVI trailer published in the E3',
+    url: '/new-trailer-final-fantasy-XVI-E3',
+    likes: 11,
+    author: 'Francisco Garcia',
+    id: '6498762a83b277a1901e977f'
+  }
+
+  const user = userEvent.setup()
+  const updateLikes = jest.fn()
+
+  render(
+    <Blog key={blog.id} blog={blog} updateLikes={updateLikes}/>
+  )
+  const likeButton = screen.getByText('Like')
+  await user.click(likeButton)
+  await user.click(likeButton)
+  expect(updateLikes.mock.calls).toHaveLength(2)
+})
