@@ -50,17 +50,17 @@ describe('Blog app', function() {
       cy.login({ username: 'pakoska', password: '1234' })
       cy.addBlog({
         title: 'React patterns',
-        author: 'Francisco Garcia',
+        author: 'Patricia Barcena',
         url: 'https://reactpatterns.com/',
-        likes: 7,
-        user: '64b6c6aec8567600846f4ff7'
+        likes: 2,
+        user: '64b6c752c8567600846f4ffa'
       })
       cy.addBlog({
         title: 'Go To Statement Considered Harmful',
-        author: 'Patricia Barcena',
+        author: 'Francisco Garcia',
         url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-        likes: 7,
-        user: '64b6c752c8567600846f4ffa'
+        likes: 12,
+        user: '64b6c6aec8567600846f4ff7'
       })
       cy.visit('http://localhost:3000')
     })
@@ -104,10 +104,15 @@ describe('Blog app', function() {
       cy.contains('Delete').should('not.exist')
     })
 
-    /*it('A user that is not the creator of the blog cant see the Delete button', function() {
-      cy.get('#Username').type('patripb')
+    it('The blog with more likes appears in first position button', function() {
+      cy.get('#Username').type('pakoska')
       cy.get('#Password').type('1234')
       cy.get('#login-button').click()
-    })*/
+
+      cy.contains('view').click()
+
+      cy.get('.blogTitle').eq(0).should('contain', 'Go To Statement Considered Harmful')
+      cy.get('.blogTitle').eq(1).should('contain', 'React patterns')
+    })
   })
 })
