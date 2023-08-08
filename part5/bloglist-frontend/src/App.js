@@ -130,6 +130,7 @@ const App = () => {
       }
       setBlogs(blogs.filter(filterId))
     } catch (exception) {
+      console.log(exception)
       setErrorMessage('Error deleting the blog')
       setTimeout(() => {
         setErrorMessage('')
@@ -145,7 +146,7 @@ const App = () => {
         <h2>blogs</h2>
         <UsernameLogout user={user} handleLogout={handleLogout}/>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} updateLikes={addLikes} removeBlog={deleteBlog}/>
+          <Blog key={blog.id} blog={blog} updateLikes={addLikes} removeBlog={deleteBlog} userName={user.name}/>
         )}
         <Togglable buttonLabel='New blog' ref={blogFormRef}>
           <BlogForm createBlog={addBlog}/>
