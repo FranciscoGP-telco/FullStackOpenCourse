@@ -48,6 +48,7 @@ export const createAnecdote = (content) => {
     }
   }
 }
+
 export const addVote = (id) => {
   return{
     type: 'ADD_VOTE',
