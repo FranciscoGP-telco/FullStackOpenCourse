@@ -13,4 +13,16 @@ const postAnecdote = async (content) => {
   return response.data
 
 }
-export default { getAll, postAnecdote }
+
+const getAnecdote = async (id) => {
+  const response = await axios.get(`${baseUrl}/${id}`)
+  return response.data
+}
+
+const update = async (updatedBlog) => {
+  const response = await axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog)
+  return response.data
+}
+
+// eslint-disable-next-line import/no-anonymous-default-export
+export default { getAll, postAnecdote, getAnecdote, update }
