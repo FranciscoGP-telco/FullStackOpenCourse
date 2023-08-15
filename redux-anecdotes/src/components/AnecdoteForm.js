@@ -11,8 +11,7 @@ const NewAnecdote = () => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-    const NewAnecdote = await anecdoteService.postAnecdote(content)
-    dispatch(createAnecdote(NewAnecdote))
+    dispatch(createAnecdote(content))
     dispatch(addNotification(`Adding new anecdote: ${content}`))
     setTimeout(() => {
       dispatch(removeNotification())
