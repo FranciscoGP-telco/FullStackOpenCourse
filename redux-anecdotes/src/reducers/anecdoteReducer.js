@@ -7,7 +7,6 @@ const anecdoteSlice = createSlice({
   reducers: {
     updateAnecdote(state, action){
       const content = action.payload
-      console.log(content)
       return state
       .map(anecdote => anecdote.id !== content.id ? anecdote : content)
       .sort((a, b) => a.votes < b.votes ? 1 : -1)
