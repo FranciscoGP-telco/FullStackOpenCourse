@@ -5,12 +5,16 @@ import { getAnecdotes, addVote } from './requests'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 
+import { useNotify } from './NotificationContext'
+
 const App = () => {
   const queryClient = useQueryClient()
+  const notifyWith = useNotify()
 
   const handleVoteMutation = useMutation(addVote, {
-    onSuccess: () => {
+    onSuccess: ({content}) => {
       queryClient.invalidateQueries('anecdotes')
+      notifyWith(`add a vote to '${content}'`)
     }
   })
 
