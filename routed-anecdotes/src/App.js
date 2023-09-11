@@ -5,10 +5,11 @@ import {
   Routes,
   Route,
   Link,
-  useParams
+  useParams,
+  useNavigate
 } from 'react-router-dom'
 
-const Menu = ({ anecdotes, addNew }) => {
+const Menu = ({ anecdotes, addNew, setNotification, notification }) => {
   const padding = {
     paddingRight: 5
   }
@@ -20,10 +21,13 @@ const Menu = ({ anecdotes, addNew }) => {
         <Link style={padding} to='/about'>about</Link>
       </div>
       <div>
+        <Notification notification={notification}/>
+      </div>
+      <div>
         <Routes>
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/anecdotes/:id' element={<Anecdote anecdotes={anecdotes} />} />
-        <Route path='/create' element={<CreateNew addNew={addNew} />} />
+        <Route path='/create' element={<CreateNew addNew={addNew} setNotification={setNotification}/>} />
         <Route path='/about' element={<About />} />
         </Routes>
       </div>
@@ -73,11 +77,29 @@ const Footer = () => (
   </div>
 )
 
+const Notification = ( { notification } ) => {
+  const style = {
+    border: 'solid',
+    padding: 10,
+    borderWidth: 1,
+    marginBottom: 5
+  }
+  
+  if (!notification) return null
+
+  return (
+    <div style={style}>
+      {notification}
+    </div>
+  )
+}
+
 const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
 
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -87,6 +109,14 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+
+    navigate('/')
+    props.setNotification(`A new anecdote ${content} created!`)
+    setTimeout(() => {
+      props.setNotification('')
+      console.log('holaaaa2')
+    }, 5000)
+
   }
 
   return (
@@ -154,7 +184,7 @@ const App = () => {
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Menu anecdotes={anecdotes} addNew={addNew}/>
+      <Menu anecdotes={anecdotes} addNew={addNew} setNotification={setNotification} notification={notification}/>
       <Footer />
     </div>
   )
