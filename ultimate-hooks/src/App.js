@@ -18,12 +18,22 @@ const useField = (type) => {
 const useResource = (baseUrl) => {
   const [resources, setResources] = useState([])
 
-  // ...
 
-  const create = (resource) => {
-    // ...
+  const create = async (resource) => {
+    const response = await axios.post(`${baseUrl}`, {...resource})
+    return response.data
   }
 
+  useEffect(() => {
+    axios
+      .get(baseUrl)
+      .then(response => {
+        setResources(response.data)
+      }).catch(error => {
+        console.log(`Error ${error}.`)
+      })
+  }, [])
+  
   const service = {
     create
   }
@@ -38,17 +48,17 @@ const App = () => {
   const name = useField('text')
   const number = useField('text')
 
-  const [notes, noteService] = useResource('http://localhost:3005/notes')
-  const [persons, personService] = useResource('http://localhost:3005/persons')
+  const notes = useResource('http://localhost:3005/notes')
+  const persons = useResource('http://localhost:3005/persons')
 
   const handleNoteSubmit = (event) => {
     event.preventDefault()
-    noteService.create({ content: content.value })
+    notes[1].create({ content: content.value })
   }
  
   const handlePersonSubmit = (event) => {
     event.preventDefault()
-    personService.create({ name: name.value, number: number.value})
+    persons[1].create({ name: name.value, number: number.value})
   }
 
   return (
@@ -58,7 +68,7 @@ const App = () => {
         <input {...content} />
         <button>create</button>
       </form>
-      {notes.map(n => <p key={n.id}>{n.content}</p>)}
+      {notes[0].map(n => <p key={n.id}>{n.content}</p>)}
 
       <h2>persons</h2>
       <form onSubmit={handlePersonSubmit}>
@@ -66,7 +76,7 @@ const App = () => {
         number <input {...number} />
         <button>create</button>
       </form>
-      {persons.map(n => <p key={n.id}>{n.name} {n.number}</p>)}
+      {persons[0].map(n => <p key={n.id}>{n.name} {n.number}</p>)}
     </div>
   )
 }

@@ -39,16 +39,29 @@
       "name": "egwetgwe",
       "number": "2",
       "id": 8
+    },
+    {
+      "name": "aaaaaa",
+      "number": "222222",
+      "id": 9
     }
   ],
   "notes": [
     {
       "content": "custom-hooks are awesome",
       "id": 1
-    },{
+    },
+    {
       "content": "best feature ever <3",
       "id": 2
+    },
+    {
+      "content": "aaaa",
+      "id": 3
+    },
+    {
+      "content": "bbbbbb",
+      "id": 4
     }
-
   ]
 }
