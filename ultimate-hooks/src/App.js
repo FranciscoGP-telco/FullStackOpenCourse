@@ -32,7 +32,7 @@ const useResource = (baseUrl) => {
       }).catch(error => {
         console.log(`Error ${error}.`)
       })
-  }, [])
+  }, [baseUrl])
   
   const service = {
     create

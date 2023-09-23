@@ -1,0 +1,27 @@
+.operation {
+    color: darkgreen;
+    padding-top: 10px;
+    font-size: 12px;
+    background-color: rgb(216, 216, 216);
+    border: 6px;
+    border-style: solid;
+    border-color: green;
+}
+
+.error {
+    color: red;
+    padding-top: 10px;
+    font-size: 12px;
+    background-color: rgb(216, 216, 216);
+    border: 6px;
+    border-style: solid;
+    border-color: darkred;
+}
+
+.blogStyle{
+    padding-top: 10px;
+    padding-left: 2px;
+    border: solid;
+    border-width: 1px;
+    margin-bottom: 5px;
+}
