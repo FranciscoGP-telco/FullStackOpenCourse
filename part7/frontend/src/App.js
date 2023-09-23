@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
@@ -11,9 +11,9 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { modifyNotification } from './reducers/notificationReducer'
+import { initializeBlogs, createBlog, addVote } from './reducers/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -21,22 +21,8 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const getAllBlogs = async () => {
-      const listOfBlogs = await blogService.getAll()
-      const compare = (a, b) => {
-        if (a.likes < b.likes){
-          return 1
-        }
-        if (a.likes > b.likes){
-          return -1
-        }
-        return 0
-      }
-      listOfBlogs.sort(compare)
-      setBlogs(listOfBlogs)
-    }
-    getAllBlogs()
-  }, [blogs])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
@@ -48,6 +34,10 @@ const App = () => {
   }, [user])
 
   const blogFormRef = useRef()
+
+  const blogs = useSelector(state => {
+    return state.blogs
+  })
 
   const handleLogout = (event) => {
     event.preventDefault()
@@ -95,7 +85,7 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     try{
       const newBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(newBlog))
+      dispatch(createBlog(newBlog))
       dispatch(modifyNotification({
         message: `A new blog ${newBlog.title} by ${newBlog.title} added`,
         error: false
@@ -110,11 +100,11 @@ const App = () => {
   const addLikes = async (id) => {
     try{
       const blogToUpdate = await blogService.getBlog(id)
-      blogToUpdate.likes += 1
-      const updatedBlog = await blogService.update(blogToUpdate, id)
-      setBlogs(blogs.map(blog => blog.id !== id ? blog : updatedBlog))
+      //blogToUpdate.likes += 1
+      //const updatedBlog = await blogService.update(blogToUpdate, id)
+      dispatch(addVote(blogToUpdate))
       dispatch(modifyNotification({
-        message: `Like added to blog ${updatedBlog.title}`,
+        message: `Like added to blog ${blogToUpdate.title}`,
         error: false
       }))
     } catch (exception) {
@@ -129,10 +119,11 @@ const App = () => {
 
     try{
       await blogService.deleteBlog(id)
-      const filterId = (blog) => {
+      /*const filterId = (blog) => {
         return blog.id === id
-      }
-      setBlogs(blogs.filter(filterId))
+      }*/
+      //dispatch(setBlogs(blogs.filter(filterId)))
+      //setBlogs(blogs.filter(filterId))
     } catch (exception) {
       console.log(exception)
       dispatch(modifyNotification({
