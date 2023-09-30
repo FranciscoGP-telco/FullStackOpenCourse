@@ -20,15 +20,20 @@ const App = () => {
 
   const dispatch = useDispatch()
 
-
-
   const user = useSelector(state => {
     return state.user
   })
 
+  const blogs = useSelector(state => {
+    return state.blogs
+  })
+
+  useSelector(state => {
+    return state.blogs
+  })
   useEffect(() => {
     dispatch(initializeBlogs())
-  }, [dispatch])
+  }, [blogs])
 
   useEffect(() => {
     dispatch(initializeUser())
