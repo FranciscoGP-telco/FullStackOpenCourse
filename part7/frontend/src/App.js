@@ -11,7 +11,7 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { modifyNotification } from './reducers/notificationReducer'
-import { initializeBlogs, createBlog, addVote } from './reducers/blogReducer'
+import { initializeBlogs, createBlog, addVote, removeBlog } from './reducers/blogReducer'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -100,8 +100,6 @@ const App = () => {
   const addLikes = async (id) => {
     try{
       const blogToUpdate = await blogService.getBlog(id)
-      //blogToUpdate.likes += 1
-      //const updatedBlog = await blogService.update(blogToUpdate, id)
       dispatch(addVote(blogToUpdate))
       dispatch(modifyNotification({
         message: `Like added to blog ${blogToUpdate.title}`,
@@ -116,14 +114,13 @@ const App = () => {
   }
 
   const deleteBlog = async (id) => {
-
     try{
-      await blogService.deleteBlog(id)
-      /*const filterId = (blog) => {
-        return blog.id === id
-      }*/
-      //dispatch(setBlogs(blogs.filter(filterId)))
-      //setBlogs(blogs.filter(filterId))
+      const blogToRemove = await blogService.getBlog(id)
+      dispatch(removeBlog(blogToRemove))
+      dispatch(modifyNotification({
+        message: `Remove blog ${blogToRemove.title}`,
+        error: false
+      }))
     } catch (exception) {
       console.log(exception)
       dispatch(modifyNotification({
