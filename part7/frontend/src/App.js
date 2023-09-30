@@ -82,7 +82,7 @@ const App = () => {
         <h2>blogs</h2>
         <UsernameLogout user={user} handleLogout={handleLogout}/>
         <Blogs />
-        <Togglable buttonLabel='New blog' ref={blogFormRef}>
+        <Togglable buttonLabel='New blog' cancelLabel='Cancel' ref={blogFormRef}>
           <BlogForm createBlog={addBlog}/>
         </Togglable>
       </div>

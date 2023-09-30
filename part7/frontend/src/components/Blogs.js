@@ -1,24 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useState } from 'react'
+import { useRef } from 'react'
 import { modifyNotification } from '../reducers/notificationReducer'
 import { addVote, removeBlog } from '../reducers/blogReducer'
+import Togglable from './Togglable'
 import blogService from '../services/blogs'
 
 const Blogs = () => {
-  const [visible, setVisible] = useState(false)
 
   const dispatch = useDispatch()
-  //const blogListRef = useRef()
+  const blogListRef = useRef()
   const blogs = useSelector(state => {
     return state.blogs
   })
-
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const toggleVisibility = () => {
-    setVisible(!visible)
-  }
 
   const addLikes = async (event, id) => {
     event.preventDefault()
@@ -62,14 +55,16 @@ const Blogs = () => {
       {blogs.map(blog =>
         <div className='blogStyle' key={blog.id}>
           <div className='blogTitle'>
-            {blog.title} <button onClick={toggleVisibility} style={hideWhenVisible}>view</button><br/>
+            {blog.title}<br/>
           </div>
-          <div style={showWhenVisible} className='togglableContent' >
-            <p>{blog.url}</p>
-            <p className='likes'>likes {blog.likes} <button id={blog.id} onClick={(e) => addLikes(e, blog.id)}>Like</button></p>
-            <p>{blog.author}</p> <button onClick={toggleVisibility}>Hide</button><br/>
-            <button onClick={(e) => deleteBlog(e, blog.id)}>Delete</button>
-          </div>
+          <Togglable buttonLabel='Show' cancelLabel='Hide' ref={blogListRef}>
+            <div>
+              <p>{blog.url}</p>
+              <p className='likes'>likes {blog.likes} <button id={blog.id} onClick={(e) => addLikes(e, blog.id)}>Like</button></p>
+              <p>{blog.author}</p><br/>
+              <button onClick={(e) => deleteBlog(e, blog.id)}>Delete</button>
+            </div>
+          </Togglable>
         </div>
       )}
     </div>
