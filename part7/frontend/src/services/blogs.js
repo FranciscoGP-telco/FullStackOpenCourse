@@ -16,7 +16,8 @@ const getBlog = async (id) => {
   const response = await axios.get(`${baseUrl}/${id}`)
   return response.data
 }
-const create = async newBlog => {
+
+const create = async (newBlog) => {
   const config = {
     headers: { Authorization: token }
   }

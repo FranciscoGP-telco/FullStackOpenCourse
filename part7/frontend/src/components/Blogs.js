@@ -9,9 +9,7 @@ const Blogs = () => {
 
   const dispatch = useDispatch()
   const blogListRef = useRef()
-  const blogs = useSelector(state => {
-    return state.blogs
-  })
+  const blogs = useSelector(state => state.blogs)
 
   const addLikes = async (event, id) => {
     event.preventDefault()
@@ -72,9 +70,3 @@ const Blogs = () => {
 }
 
 export default Blogs
-
-/*
-<Togglable buttonLabel='New blog' ref={blogFormRef}>
-<BlogForm createBlog={addBlog}/>
-</Togglable>
-*/

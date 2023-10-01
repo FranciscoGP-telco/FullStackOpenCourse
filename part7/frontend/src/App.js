@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Blogs from './components/Blogs'
@@ -6,12 +6,8 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import UsernameLogout from './components/UsernameLogout'
 import BlogForm from './components/BlogForm'
-import Togglable from './components/Togglable'
 
-import blogService from './services/blogs'
-//import loginService from './services/login'
-import { modifyNotification } from './reducers/notificationReducer'
-import { initializeBlogs, createBlog } from './reducers/blogReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUser, logoutUser, loginUser } from './reducers/loginReducer'
 
 const App = () => {
@@ -20,19 +16,16 @@ const App = () => {
 
   const dispatch = useDispatch()
 
-  const user = useSelector(state => {
-    return state.user
-  })
+  const user = useSelector(state => state.user)
 
-  const blogs = useSelector(state => {
-    return state.blogs
-  })
+  const blogs = useSelector(state => state.blogs)
 
-  useSelector(state => {
-    return state.blogs
-  })
   useEffect(() => {
-    dispatch(initializeBlogs())
+    try{
+      dispatch(initializeBlogs())
+    } catch (exception){
+      console.log('Error getting the blogs:', exception)
+    }
   }, [blogs])
 
   useEffect(() => {
@@ -40,25 +33,6 @@ const App = () => {
   }, [dispatch])
 
 
-  const blogFormRef = useRef()
-
-
-  const addBlog = async (blogObject) => {
-    blogFormRef.current.toggleVisibility()
-    try{
-      const newBlog = await blogService.create(blogObject)
-      dispatch(createBlog(newBlog))
-      dispatch(modifyNotification({
-        message: `A new blog ${newBlog.title} by ${newBlog.title} added`,
-        error: false
-      }))
-    } catch (exception) {
-      dispatch(modifyNotification({
-        message: 'Error posting the new blog',
-        error: true
-      }))
-    }
-  }
 
   const handleLogout = (event) => {
     event.preventDefault()
@@ -87,9 +61,7 @@ const App = () => {
         <h2>blogs</h2>
         <UsernameLogout user={user} handleLogout={handleLogout}/>
         <Blogs />
-        <Togglable buttonLabel='New blog' cancelLabel='Cancel' ref={blogFormRef}>
-          <BlogForm createBlog={addBlog}/>
-        </Togglable>
+        <BlogForm />
       </div>
     )
   }
