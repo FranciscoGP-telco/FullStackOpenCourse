@@ -1,14 +1,14 @@
 import { useDispatch } from 'react-redux'
-import { useState } from 'react'
+import { useField } from '../hooks'
 import { useRef } from 'react'
 import { modifyNotification } from '../reducers/notificationReducer'
 import { createBlog } from '../reducers/blogReducer'
 import Togglable from './Togglable'
 
 const BlogForm = () => {
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+  const { reset: resetTitle, ...newTitle } = useField('text')
+  const { reset: resetAuthor, ...newAuthor } = useField('text')
+  const { reset: resetUrl, ...newUrl } = useField('text')
 
   const dispatch = useDispatch()
   const blogFormRef = useRef()
@@ -17,9 +17,9 @@ const BlogForm = () => {
     event.preventDefault()
     blogFormRef.current.toggleVisibility()
     const newBlog = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
+      title: newTitle.value,
+      author: newAuthor.value,
+      url: newUrl.value,
       likes: 0
     }
     try{
@@ -34,9 +34,9 @@ const BlogForm = () => {
         error: true
       }))
     }
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
+    resetTitle()
+    resetAuthor()
+    resetUrl()
   }
 
 
@@ -46,29 +46,11 @@ const BlogForm = () => {
       <Togglable buttonLabel='Create' cancelLabel='Hide' ref={blogFormRef}>
         <form onSubmit={addBlog}>
           title:
-          <input
-            type="text"
-            value={newTitle}
-            name="Title"
-            id="Title"
-            placeholder='title of the blog'
-            onChange={event => setNewTitle(event.target.value)}/><br/>
+          <input {...newTitle}/><br/>
           author:
-          <input
-            type="text"
-            value={newAuthor}
-            name="Author"
-            id="Author"
-            placeholder='name of the author'
-            onChange={event => setNewAuthor(event.target.value)}/><br/>
+          <input {...newAuthor}/><br/>
           url:
-          <input
-            type="text"
-            value={newUrl}
-            name="Url"
-            id="Url"
-            placeholder='url of the blog'
-            onChange={event => setNewUrl(event.target.value)}/><br/>
+          <input {...newUrl}/><br/>
           <button type="submit">create</button>
         </form>
       </Togglable>

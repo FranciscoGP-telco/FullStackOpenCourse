@@ -3,8 +3,8 @@ import { useDispatch } from 'react-redux'
 import { loginUser } from '../reducers/loginReducer'
 
 const LoginForm = () => {
-  const username = useField('text')
-  const password = useField('password')
+  const { reset: resetUsername, ...username } = useField('text')
+  const { reset: resetPassword, ...password } = useField('text')
 
   const dispatch = useDispatch()
 
@@ -12,9 +12,10 @@ const LoginForm = () => {
     event.preventDefault()
     dispatch(loginUser({
       username: username.value,
-      password: password.value }))
-    username.reset()
-    password.reset()
+      password: password.value
+    }))
+    resetUsername()
+    resetPassword()
   }
 
   return(
