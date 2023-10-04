@@ -1,15 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { modifyNotification } from '../reducers/notificationReducer'
-import { addVote, removeBlog } from '../reducers/blogReducer'
+import { addVote, removeBlog, initializeBlogs } from '../reducers/blogReducer'
 import Togglable from './Togglable'
 import blogService from '../services/blogs'
 
 const Blogs = () => {
-
   const dispatch = useDispatch()
   const blogListRef = useRef()
+
   const blogs = useSelector(state => state.blogs)
+
+  useEffect(() => {
+    dispatch(initializeBlogs())
+  }, [blogs])
 
   const addLikes = async (event, id) => {
     event.preventDefault()
@@ -47,6 +51,7 @@ const Blogs = () => {
       }
     }
   }
+
 
   return (
     <div>
