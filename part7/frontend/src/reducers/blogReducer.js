@@ -26,7 +26,6 @@ const blogSlice = createSlice({
   }
 })
 
-export const { updateBlog, appendBlog, setBlogs, deleteBlog } = blogSlice.actions
 
 export const initializeBlogs = () => {
   return async dispatch => {
@@ -62,4 +61,7 @@ export const removeBlog = content => {
     dispatch(deleteBlog(content.id))
   }
 }
+
+export const { updateBlog, appendBlog, setBlogs, deleteBlog } = blogSlice.actions
+
 export default blogSlice.reducer

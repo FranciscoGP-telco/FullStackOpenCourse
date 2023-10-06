@@ -8,8 +8,9 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import UsernameLogout from './components/UsernameLogout'
 import BlogForm from './components/BlogForm'
+import Header from './components/Header'
+import Users from './components/Users'
 
-//import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUser } from './reducers/loginReducer'
 
 const App = () => {
@@ -23,27 +24,28 @@ const App = () => {
 
   if (user) {
     return (
-      <div>
+      <>
         <Link to='/blogs'>Blog List</Link>
         <Link to='/addblog'>Add Blog</Link>
+        <Link to='/users'>Users</Link>
         <Link to='/logout'>logout</Link>
         <hr/>
-        <h2>blogs</h2>
+        <Header />
         <Notification />
         <Routes>
           <Route path='/logout' element={<UsernameLogout />} />
           <Route path='/blogs' element={<Blogs />} />
           <Route path='/addblog' element={<BlogForm />} />
+          <Route path='/users' element={<Users />} />
         </Routes>
-      </div>
+      </>
     )
   }
-
   return (
-    <div>
+    <>
       <Notification />
       <LoginForm />
-    </div>
+    </>
   )
 }
 
