@@ -23,6 +23,7 @@ const Users = () => {
       setUser(userFromId)
     }
     setUserFromServer()
+
     if(!user) return null
 
     return (
