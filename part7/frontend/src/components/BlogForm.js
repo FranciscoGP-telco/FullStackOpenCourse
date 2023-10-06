@@ -1,9 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { useField } from '../hooks'
-import { useRef } from 'react'
 import { modifyNotification } from '../reducers/notificationReducer'
 import { createBlog } from '../reducers/blogReducer'
-import Togglable from './Togglable'
 
 const BlogForm = () => {
   const { reset: resetTitle, ...newTitle } = useField('text')
@@ -11,11 +9,9 @@ const BlogForm = () => {
   const { reset: resetUrl, ...newUrl } = useField('text')
 
   const dispatch = useDispatch()
-  const blogFormRef = useRef()
 
   const addBlog = async (event) => {
     event.preventDefault()
-    blogFormRef.current.toggleVisibility()
     const newBlog = {
       title: newTitle.value,
       author: newAuthor.value,
@@ -43,17 +39,15 @@ const BlogForm = () => {
   return(
     <div>
       <h2>Create new blog</h2>
-      <Togglable buttonLabel='Create' cancelLabel='Hide' ref={blogFormRef}>
-        <form onSubmit={addBlog}>
-          title:
-          <input {...newTitle}/><br/>
-          author:
-          <input {...newAuthor}/><br/>
-          url:
-          <input {...newUrl}/><br/>
-          <button type="submit">create</button>
-        </form>
-      </Togglable>
+      <form onSubmit={addBlog}>
+        title:
+        <input {...newTitle}/><br/>
+        author:
+        <input {...newAuthor}/><br/>
+        url:
+        <input {...newUrl}/><br/>
+        <button type="submit">create</button>
+      </form>
     </div>
   )
 }

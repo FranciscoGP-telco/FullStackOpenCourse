@@ -16,7 +16,6 @@ import { initializeUser } from './reducers/loginReducer'
 
 const App = () => {
   const dispatch = useDispatch()
-
   const user = useSelector(state => state.user)
 
   useEffect(() => {
@@ -26,10 +25,9 @@ const App = () => {
   if (user) {
     return (
       <>
-        <Link to='/blogs'>Blog List</Link>
-        <Link to='/addblog'>Add Blog</Link>
-        <Link to='/users'>Users</Link>
-        <Link to='/logout'>logout</Link>
+        <Link to='/blogs'>Blog List </Link>
+        <Link to='/users'>Users </Link>
+        <UsernameLogout />
         <hr/>
         <Header />
         <Notification />
