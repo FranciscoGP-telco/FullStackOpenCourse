@@ -1,12 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
+import { useField } from '../hooks'
 import { modifyNotification } from '../reducers/notificationReducer'
-import { addVote, removeBlog, initializeBlogs } from '../reducers/blogReducer'
+import { addVote, removeBlog, initializeBlogs, updateBlog } from '../reducers/blogReducer'
 import { useMatch } from 'react-router-dom'
 import blogService from '../services/blogs'
 
 const Blog = () => {
   const dispatch = useDispatch()
+  const { reset: resetComment, ...newComment } = useField('text')
   const match = useMatch('/blogs/:id')
   const blogIdFromUrl = match.params.id
   const blogs = useSelector(state => state.blogs)
@@ -44,7 +46,7 @@ const Blog = () => {
           error: false
         }))
       } catch (exception) {
-        console.log(exception)
+        console.error(exception)
         dispatch(modifyNotification({
           message: 'Error deleting the blog',
           error: true
@@ -53,17 +55,52 @@ const Blog = () => {
     }
   }
 
+  const addComment = async (event, id) => {
+    event.preventDefault()
+    const comment = {
+      comments: newComment.value
+    }
+    try{
+      const blogWithNewComment = await blogService.addComment(id, comment)
+      dispatch(updateBlog(blogWithNewComment))
+      dispatch(modifyNotification({
+        message: `Added new comment: ${newComment.value}`,
+        error: false
+      }))
+      resetComment()
+    } catch (exception) {
+      console.error(exception)
+      dispatch(modifyNotification({
+        message: 'Error adding the comment',
+        error: true
+      }))
+    }
+  }
+
   return (
     <div>
       {blog.map(blog =>
-        <div className='blogStyle' key={blog.id}>
-          <div className='blogTitle'>
-            {blog.title}<br/>
+        <div key={blog.id}>
+          <div>
+            <h2>{blog.title}</h2>
           </div>
           <div>
             <p>{blog.url}</p>
-            <p className='likes'>likes {blog.likes} <button id={blog.id} onClick={(e) => addLikes(e, blog.id)}>Like</button></p>
-            <p>{blog.author}</p><br/>
+            <p>likes {blog.likes} <button id={blog.id} onClick={(e) => addLikes(e, blog.id)}>Like</button></p>
+            <p>added by {blog.author}</p><br/>
+            <h3>Comments</h3>
+            <ul>
+              {blog.comments.map((comment, key) =>
+                <li key={key}>{comment}</li>
+              )}
+            </ul>
+            <h3>Add a coment:</h3>
+            <form onSubmit={(e) => addComment(e, blog.id)}>
+              Comment:
+              <input {...newComment}/><br/>
+              <button type="submit">add</button>
+            </form>
+            <h3>Delete the blog:</h3>
             <button onClick={(e) => deleteBlog(e, blog.id)}>Delete</button>
           </div>
         </div>
