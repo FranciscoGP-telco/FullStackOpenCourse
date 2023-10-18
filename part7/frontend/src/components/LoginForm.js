@@ -1,10 +1,12 @@
 import { useField } from '../hooks'
 import { useDispatch } from 'react-redux'
 import { loginUser } from '../reducers/loginReducer'
+import { Button, Form, Input, Typography } from 'antd'
 
 const LoginForm = () => {
   const { reset: resetUsername, ...username } = useField('text')
   const { reset: resetPassword, ...password } = useField('text')
+  const { Title } = Typography
 
   const dispatch = useDispatch()
 
@@ -19,20 +21,16 @@ const LoginForm = () => {
   }
 
   return(
-    <div>
-      <h2>Log in to the application</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input {...username}/>
-        </div>
-        <div>
-          password
-          <input {...password}/>
-        </div>
-        <button id="login-button" type="submit">login</button>
-      </form>
-    </div>
+    <>
+      <Title>Log in to the application</Title>
+      <Form >
+        Username
+        <Input {...username}/>
+        Password
+        <Input.Password {...password}/>
+        <Button onClick={handleLogin}>login</Button>
+      </Form>
+    </>
   )
 }
 

@@ -1,12 +1,14 @@
 import userService from '../services/users'
 import { useState, useEffect } from 'react'
 import { useMatch, Link } from 'react-router-dom'
+import { Table, Typography, List } from 'antd'
 
 const Users = () => {
   const [users, setUsers] = useState([])
   const [user, setUser] = useState(null)
   const match = useMatch('/users/:id')
-
+  const { Title } = Typography
+  const { Column } = Table
   const initializeUsers = async () => {
     const userList = await userService.getAll()
     setUsers(userList)
@@ -15,6 +17,7 @@ const Users = () => {
   useEffect(() => {
     initializeUsers()
   }, [])
+
 
   if(match) {
     const idFromUrl = match.params.id
@@ -28,34 +31,42 @@ const Users = () => {
 
     return (
       <div>
-        <h2>{user.name}</h2>
-        <h3>added blogs</h3>
-        <ul>
-          {user.blogs.map(blog =>
-            <li key={blog.id}>{blog.title}</li>
+        <Title>{user.name}</Title>
+        <Title level={3}>added blogs</Title>
+        <List
+          itemLayout="horizontal"
+          dataSource={user.blogs}
+          renderItem={(blog) => (
+            <List.Item>{blog.title}</List.Item>
           )}
-        </ul>
+        />
       </div>
     )
   }
 
   return (
     <div>
-      <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Blogs Created</th>
-          </tr>
-        </thead>
-        {users.map(user =>
-          <tr key={user.id}>
-            <td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
-            <td>{user.blogs.length}</td>
-          </tr>
-        )}
-      </table>
+      <Title>Users</Title>
+      <Table dataSource={users}>
+        <Column
+          title='Users'
+          dataIndex='name'
+          key='name'
+          render={(_, record) => (
+            <Link to={`/users/${record.id}`}>{record.name}</Link>
+          )}
+        />
+        <Column
+          title='Blogs created'
+          dataIndex='blogs'
+          key='blogs'
+          render={(_, record) => (
+            <>
+              {record.blogs.length}
+            </>
+          )}
+        />
+      </Table>
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { logoutUser } from '../reducers/loginReducer'
 import { useDispatch, useSelector } from 'react-redux'
+import { Popover, Button } from 'antd'
 
 const UsernameLogout = () => {
   const dispatch = useDispatch()
@@ -12,7 +13,9 @@ const UsernameLogout = () => {
 
   return (
     <>
-      <em>{user.name} is logged in <form onSubmit={handleLogout} style={{ display: 'inline' }}><button type="submit">Logout</button></form></em>
+      <Popover content={<Button danger onClick={handleLogout}>Logout</Button>} trigger="click">
+        <Button>{user.name}</Button>
+      </Popover>
     </>
   )
 }

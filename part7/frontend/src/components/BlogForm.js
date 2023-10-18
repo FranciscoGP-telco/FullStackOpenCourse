@@ -2,12 +2,14 @@ import { useDispatch } from 'react-redux'
 import { useField } from '../hooks'
 import { modifyNotification } from '../reducers/notificationReducer'
 import { createBlog } from '../reducers/blogReducer'
+import { Button, Form, Input, Typography } from 'antd'
 
 const BlogForm = () => {
   const { reset: resetTitle, ...newTitle } = useField('text')
   const { reset: resetAuthor, ...newAuthor } = useField('text')
   const { reset: resetUrl, ...newUrl } = useField('text')
 
+  const { Title } = Typography
   const dispatch = useDispatch()
 
   const addBlog = async (event) => {
@@ -38,16 +40,16 @@ const BlogForm = () => {
 
   return(
     <div>
-      <h2>Create new blog</h2>
-      <form onSubmit={addBlog}>
+      <Title>Create new blog</Title>
+      <Form>
         title:
-        <input {...newTitle}/><br/>
+        <Input {...newTitle}/><br/>
         author:
-        <input {...newAuthor}/><br/>
+        <Input {...newAuthor}/><br/>
         url:
-        <input {...newUrl}/><br/>
-        <button type="submit">create</button>
-      </form>
+        <Input {...newUrl}/><br/>
+        <Button type='primary' onClick={addBlog}>create</Button>
+      </Form>
     </div>
   )
 }

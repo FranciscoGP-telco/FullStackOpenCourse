@@ -9,10 +9,11 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import UsernameLogout from './components/UsernameLogout'
 import BlogForm from './components/BlogForm'
-import Header from './components/Header'
 import Users from './components/Users'
-
+import { Divider } from 'antd'
 import { initializeUser } from './reducers/loginReducer'
+import { Button, Dropdown } from 'antd'
+
 
 const App = () => {
   const dispatch = useDispatch()
@@ -25,11 +26,26 @@ const App = () => {
   if (user) {
     return (
       <>
-        <Link to='/blogs'>Blog List </Link>
-        <Link to='/users'>Users </Link>
+        <Dropdown menu={{
+          items: [
+            {
+              key: '1',
+              label: (
+                <Link to='/blogs'>Blogs</Link>
+              ),
+            },
+            {
+              key: '2',
+              label: (
+                <Link to='/users'>Users</Link>
+              ),
+            }
+          ]
+        }} placement="bottomLeft" arrow>
+          <Button>Menu</Button>
+        </Dropdown>
         <UsernameLogout />
-        <hr/>
-        <Header />
+        <Divider />
         <Notification />
         <Routes>
           <Route path='/logout' element={<UsernameLogout />} />

@@ -1,5 +1,6 @@
 
 import { useSelector } from 'react-redux'
+import { Alert } from 'antd'
 
 const Notification = () => {
   const notification = useSelector(state => {
@@ -7,8 +8,8 @@ const Notification = () => {
   })
 
   if (notification.message === '') return null
-  if (notification.error) return <div className='error'>{notification.message}</div>
-  return <div className='operation'>{notification.message}</div>
+  if (notification.error) return  <Alert message={notification.message} type='error'/>
+  return <Alert message={notification.message} type='success'/>
 }
 
 export default Notification

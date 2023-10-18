@@ -43,9 +43,6 @@ blogsRouter.post('/:id/comments', middleware.userExtractor, async (request, resp
   const body = request.body
   const params = request.params
   const blog = await Blog.findById(params.id)
-  console.log(blog)
-  console.log(body.comments)
-  console.log(params.id)
   if(body.comments && params.id && blog){
     blog.comments.push(body.comments)
     const updateBlog = await Blog.findByIdAndUpdate(params.id, blog)

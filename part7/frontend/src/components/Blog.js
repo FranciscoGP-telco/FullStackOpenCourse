@@ -5,6 +5,8 @@ import { modifyNotification } from '../reducers/notificationReducer'
 import { addVote, removeBlog, initializeBlogs, updateBlog } from '../reducers/blogReducer'
 import { useMatch } from 'react-router-dom'
 import blogService from '../services/blogs'
+import { Descriptions, Button, List, Form, Input } from 'antd'
+import { LikeOutlined } from '@ant-design/icons'
 
 const Blog = () => {
   const dispatch = useDispatch()
@@ -78,34 +80,31 @@ const Blog = () => {
   }
 
   return (
-    <div>
+    <>
       {blog.map(blog =>
-        <div key={blog.id}>
-          <div>
-            <h2>{blog.title}</h2>
-          </div>
-          <div>
-            <p>{blog.url}</p>
-            <p>likes {blog.likes} <button id={blog.id} onClick={(e) => addLikes(e, blog.id)}>Like</button></p>
-            <p>added by {blog.author}</p><br/>
-            <h3>Comments</h3>
-            <ul>
-              {blog.comments.map((comment, key) =>
-                <li key={key}>{comment}</li>
+        <Descriptions title={blog.title} key={blog.id} bordered='true'>
+          <Descriptions.Item label='URL'>{blog.url}</Descriptions.Item>
+          <Descriptions.Item label='Likes'>{blog.likes}</Descriptions.Item>
+          <Descriptions.Item label='Add Like'><Button id={blog.id} onClick={(e) => addLikes(e, blog.id)} icon={<LikeOutlined />}>Like</Button></Descriptions.Item>
+          <Descriptions.Item label='Author'>{blog.author}</Descriptions.Item>
+          <Descriptions.Item label='Comments'>
+            <List
+              itemLayout="horizontal"
+              dataSource={blog.comments}
+              renderItem={(comment) => (
+                <List.Item>{comment}</List.Item>
               )}
-            </ul>
-            <h3>Add a coment:</h3>
-            <form onSubmit={(e) => addComment(e, blog.id)}>
-              Comment:
-              <input {...newComment}/><br/>
-              <button type="submit">add</button>
-            </form>
-            <h3>Delete the blog:</h3>
-            <button onClick={(e) => deleteBlog(e, blog.id)}>Delete</button>
-          </div>
-        </div>
+            />
+            <Form>
+              Add a Comment:
+              <Input {...newComment}/><br/>
+              <Button onClick={(e) => addComment(e, blog.id)}>add</Button>
+            </Form>
+          </Descriptions.Item>
+          <Descriptions.Item label='Delete Blog'><Button danger trigger='click' onClick={(e) => deleteBlog(e, blog.id)}>Delete</Button></Descriptions.Item>
+        </Descriptions>
       )}
-    </div>
+    </>
   )
 }
 
