@@ -179,9 +179,9 @@ const resolvers = {
       if (!author) {
         return null
       }
-
       const updatedAuthor = { ...author, born: args.born }
-      authors = authors.map(author => authors.name === authors.name ? updatedAuthor : author)
+      authors = authors.map(author => author.name === updatedAuthor.name ? updatedAuthor : author)
+      console.log(authors)
       return updatedAuthor
     }
   }
