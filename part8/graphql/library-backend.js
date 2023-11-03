@@ -3,6 +3,7 @@ const { startStandaloneServer } = require('@apollo/server/standalone')
 const { v1: uuid } = require('uuid')
 
 const mongoose = require('mongoose')
+var ObjectId = require('mongoose').Types.ObjectId
 mongoose.set('strictQuery', false)
 const Book = require('./models/book')
 const Author = require('./models/author')
@@ -135,7 +136,6 @@ const typeDefs = `
    addAuthor(
       name: String!
       born: Int
-      id: ID!
       bookCount: Int
    ): Author
 
@@ -145,25 +145,52 @@ const typeDefs = `
    ): Author
   }
 `
+const createAuthor = async (args) => {
+  try{
+    bookAuthor = new Author({
+      name: args.author || args.name,
+      born: args.born
+    })
+    await bookAuthor.save()
+  } catch (error) {
+    throw new GraphQLError('Saving author error', {
+    extensions: {
+      code: 'BAD_USER_INPUT',
+      invalidArgs: authorName,
+      error
+    }
+    })
+  }
+  return bookAuthor
+}
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: () => books,
-    getBooks: (root, args) => books
-      .filter(book => book.genres.find(genre => genre === args.genre) === args.genre)
-      .filter(book => book.author === args.author),
-    allAuthors: () => authors
+    bookCount: async () => Book.countDocuments(),
+    authorCount: async () => Author.countDocuments(),
+    allBooks: async () => Book.find({}),
+    getBooks: async (root, args) => {
+      const author = await Author.findOne({ name: args.author })
+      const listOfBooks =  Book.find({ author: new ObjectId(author._id) })
+      if(args.genre){
+        return listOfBooks.find({ genres: args.genre })
+      }
+      return listOfBooks
+    },
+    allAuthors: async () => Author.find()
   },
   Author: {
-    bookCount: (root) => books.filter(book => root.name === book.author).length
+    bookCount: async (root) => {
+      const listOfBooks = await Book.find({ author: root.name })
+      return listOfBooks.countDocuments()
+    }
   },
   Mutation: {
     addBook: async (root, args) => {
-      const bookAuthor = new Author({
-        name: args.author
-      })
+      let bookAuthor = await Author.findOne({name: args.author })
+      if(!bookAuthor){
+        bookAuthor = await createAuthor(args)
+      }
       const book = new Book({ ...args, author: bookAuthor })
       try{
         await book.save()
@@ -178,9 +205,8 @@ const resolvers = {
       }
       return book
     },
-    addAuthor: (root, args) => {
-      const author = { ... args, id: uuid() }
-      authors = authors.concat(author)
+    addAuthor: async (root, args) => {
+      const author = await createAuthor(args)
       return author
     },
     editAuthor: (root, args) => {
