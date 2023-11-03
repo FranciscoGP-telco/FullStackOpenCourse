@@ -210,15 +210,25 @@ const resolvers = {
       const author = await createAuthor(args)
       return author
     },
-    editAuthor: (root, args) => {
-      const author = authors.find(author => author.name === args.name)
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne( { name: args.name} )
       if (!author) {
         return null
       }
-      const updatedAuthor = { ...author, born: args.born }
-      authors = authors.map(author => author.name === updatedAuthor.name ? updatedAuthor : author)
-      console.log(authors)
-      return updatedAuthor
+      author.born = args.born
+      try{
+        await author.save()
+      } catch (error) {
+        console.log(error)
+        throw new GraphQLError('Editing year failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.born,
+            error
+          }
+        })
+      }
+      return author
     }
   }
 }
