@@ -109,11 +109,12 @@ const createAuthor = async (args) => {
   return bookAuthor
 }
 
+
 const resolvers = {
   Query: {
     bookCount: async () => Book.countDocuments(),
     authorCount: async () => Author.countDocuments(),
-    allBooks: async () => Book.find({}),
+    allBooks: async () => Book.find({}).populate('author'),
     getBooks: async (root, args) => {
       const author = await Author.findOne({ name: args.author })
       const listOfBooks =  Book.find({ author: new ObjectId(author._id) })
@@ -125,7 +126,7 @@ const resolvers = {
     allAuthors: async () => Author.find(),
     me: (root, args, context ) => {
       return context.currentUser
-    }
+    },
   },
   Author: {
     bookCount: async (root) => {
@@ -133,6 +134,12 @@ const resolvers = {
       const listOfBooks =  Book.find({ author: new ObjectId(author._id) })
       return listOfBooks.countDocuments()
     }
+  },
+  Book: {
+    author: async ( args ) => {
+      const author = await Author.findOne({ name: args.author.name })
+      return author
+    },
   },
   Mutation: {
     addBook: async (root, args, context) => {
